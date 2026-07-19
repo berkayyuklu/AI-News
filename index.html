@@ -47,7 +47,7 @@
       <span class="btn__arrow">→</span>
     </button>
 
-    <p class="splash__hint">v1.0 · canlı veri altyapısına hazır</p>
+    <p class="splash__hint">v1.1 · Firebase ile canlı veri &amp; kullanıcı girişi</p>
   </div>
 </div>
 
@@ -63,16 +63,32 @@
         <span class="logo__text">Sinyal<span class="accent-cyan">AI</span></span>
       </a>
 
-      <div class="live-badge">
-        <span class="live-badge__dot" aria-hidden="true"></span>
-        <span class="live-badge__label">Yayında</span>
+      <div class="site-header__right">
+        <div class="live-badge">
+          <span class="live-badge__dot" aria-hidden="true"></span>
+          <span class="live-badge__label">Yayında</span>
+        </div>
+
+        <!-- Giriş yapılmamışken görünür -->
+        <button id="open-auth-btn" class="btn btn--ghost" type="button">Giriş Yap</button>
+
+        <!-- Giriş yapıldığında görünür -->
+        <div id="user-menu" class="user-menu" hidden>
+          <button id="user-menu-trigger" class="user-menu__trigger" type="button">
+            <img id="user-menu-avatar" class="user-menu__avatar" src="" alt="">
+            <span id="user-menu-name" class="user-menu__name"></span>
+          </button>
+          <div id="user-menu-dropdown" class="user-menu__dropdown" hidden>
+            <a id="admin-link" href="admin.html" class="user-menu__item" hidden>Admin Paneli</a>
+            <button id="logout-btn" class="user-menu__item" type="button">Çıkış Yap</button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
 
   <main>
     <section class="hero container">
-      <p class="eyebrow">// besleme aktif</p>
       <h1 class="hero__title">Son Yapay Zeka Haberleri</h1>
       <p class="hero__subtitle">
         Modelden ürüne, araştırmadan araç setine — takip etmeye değer her şey.
@@ -81,9 +97,8 @@
 
     <section class="news container" aria-label="Haber akışı">
       <div id="news-grid" class="news-grid">
-        <!-- Kartlar script.js içindeki renderNewsGrid() fonksiyonu tarafından
-             dinamik olarak buraya basılır. Şu an örnek veriyle,
-             ileride Firebase Firestore getDocs() çıktısıyla doldurulacak. -->
+        <!-- Kartlar script.js -> renderNewsGrid() tarafından
+             Firestore "news" koleksiyonundan dinamik olarak basılır. -->
       </div>
 
       <div id="news-empty" class="news-empty" hidden>
@@ -96,12 +111,125 @@
   <footer class="site-footer">
     <div class="container site-footer__inner">
       <span>© 2026 SinyalAI</span>
-      <span class="site-footer__dim">Statik altyapı · Firebase entegrasyonuna hazır</span>
+      <span class="site-footer__dim">Firebase Auth &amp; Firestore ile çalışıyor</span>
     </div>
   </footer>
 
 </div>
 
-<script src="script.js"></script>
+<!-- ============================================= -->
+<!-- GİRİŞ / KAYIT MODALI                           -->
+<!-- ============================================= -->
+<div id="auth-modal" class="modal-overlay" hidden>
+  <div class="modal auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+    <button class="modal__close" type="button" data-close-modal="auth-modal" aria-label="Kapat">✕</button>
+
+    <div class="auth-modal__tabs">
+      <button class="auth-modal__tab is-active" type="button" data-auth-tab="login">Giriş Yap</button>
+      <button class="auth-modal__tab" type="button" data-auth-tab="register">Kayıt Ol</button>
+    </div>
+
+    <h2 id="auth-modal-title" class="sr-only">Giriş veya Kayıt</h2>
+
+    <button id="google-auth-btn" class="btn btn--google" type="button">
+      <span class="btn__google-icon" aria-hidden="true">G</span>
+      Google ile Hızlı Giriş
+    </button>
+
+    <div class="auth-modal__divider"><span>veya</span></div>
+
+    <form id="login-form" class="auth-form">
+      <label class="field">
+        <span class="field__label">E-posta</span>
+        <input type="email" name="email" required autocomplete="email">
+      </label>
+      <label class="field">
+        <span class="field__label">Şifre</span>
+        <input type="password" name="password" required autocomplete="current-password">
+      </label>
+      <p class="auth-form__error" data-form-error hidden></p>
+      <button class="btn btn--primary" type="submit">Giriş Yap</button>
+    </form>
+
+    <form id="register-form" class="auth-form" hidden>
+      <label class="field">
+        <span class="field__label">Ad Soyad</span>
+        <input type="text" name="name" required autocomplete="name">
+      </label>
+      <label class="field">
+        <span class="field__label">E-posta</span>
+        <input type="email" name="email" required autocomplete="email">
+      </label>
+      <label class="field">
+        <span class="field__label">Şifre</span>
+        <input type="password" name="password" required minlength="6" autocomplete="new-password">
+      </label>
+      <p class="auth-form__error" data-form-error hidden></p>
+      <button class="btn btn--primary" type="submit">Hesap Oluştur</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================= -->
+<!-- HABER DETAY MODALI (beğeni + yorumlar)         -->
+<!-- ============================================= -->
+<div id="article-modal" class="modal-overlay" hidden>
+  <div class="modal article-modal" role="dialog" aria-modal="true" aria-labelledby="article-modal-title">
+    <button class="modal__close" type="button" data-close-modal="article-modal" aria-label="Kapat">✕</button>
+
+    <div class="article-modal__body">
+      <span id="article-tag" class="card__tag"></span>
+      <h2 id="article-modal-title" class="article-modal__title"></h2>
+      <p id="article-date" class="article-modal__date"></p>
+      <div id="article-image" class="article-modal__image"></div>
+      <p id="article-content" class="article-modal__content"></p>
+
+      <div class="article-modal__actions">
+        <button id="like-btn" class="like-btn" type="button">
+          <span class="like-btn__icon" aria-hidden="true">♥</span>
+          <span id="like-count">0</span>
+        </button>
+        <span id="comment-count" class="article-modal__comment-count">0 yorum</span>
+      </div>
+
+      <section class="comments" aria-label="Yorumlar">
+        <form id="comment-form" class="comment-form">
+          <textarea id="comment-input" placeholder="Bir yorum yaz..." rows="2" required></textarea>
+          <button class="btn btn--primary btn--sm" type="submit">Gönder</button>
+        </form>
+        <p id="comment-login-hint" class="comment-login-hint" hidden>
+          Yorum yapmak ve beğenmek için <button type="button" data-open-auth class="link-btn">giriş yapmalısın</button>.
+        </p>
+
+        <div id="comments-list" class="comments-list"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- Yorum / yanıt şablonu (JS tarafından klonlanır) -->
+<template id="comment-template">
+  <div class="comment">
+    <div class="comment__header">
+      <img class="comment__avatar" src="" alt="">
+      <span class="comment__author"></span>
+      <span class="comment__date"></span>
+    </div>
+    <p class="comment__text"></p>
+    <div class="comment__actions">
+      <button class="comment__like-btn" type="button">
+        <span aria-hidden="true">♥</span> <span class="comment__like-count">0</span>
+      </button>
+      <button class="comment__reply-btn" type="button">Yanıtla</button>
+    </div>
+    <form class="comment__reply-form" hidden>
+      <textarea rows="2" placeholder="Yanıt yaz..." required></textarea>
+      <button class="btn btn--primary btn--sm" type="submit">Yanıtla</button>
+    </form>
+    <div class="comment__replies"></div>
+  </div>
+</template>
+
+<script type="module" src="script.js"></script>
 </body>
 </html>
