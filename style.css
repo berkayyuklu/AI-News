@@ -28,6 +28,13 @@
 
 * { box-sizing: border-box; }
 
+/* Herhangi bir öğeye class üzerinden display:flex/block/grid verilse bile
+   "hidden" özelliği her zaman kazansın. Modal, form, buton gibi birçok
+   bileşen bu kurala dayanıyor. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -617,6 +624,7 @@ body.modal-open { overflow: hidden; }
   padding: 60px 20px;
   overflow-y: auto;
 }
+
 
 .modal {
   position: relative;
