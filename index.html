@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SinyalAI — Yapay Zeka Haber Merkezi</title>
+<meta name="description" content="Yapay zeka dünyasındaki en güncel gelişmeler, araçlar ve analizler.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================= -->
+<!-- SPLASH / TANITIM EKRANI                        -->
+<!-- ============================================= -->
+<div id="splash-screen" class="splash">
+  <div class="splash__field" aria-hidden="true">
+    <span class="splash__node n1"></span>
+    <span class="splash__node n2"></span>
+    <span class="splash__node n3"></span>
+    <span class="splash__node n4"></span>
+    <svg class="splash__lines" viewBox="0 0 800 600" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="120" y1="140" x2="420" y2="260" />
+      <line x1="420" y1="260" x2="680" y2="120" />
+      <line x1="420" y1="260" x2="300" y2="470" />
+      <line x1="300" y1="470" x2="620" y2="480" />
+    </svg>
+  </div>
+
+  <div class="splash__content">
+    <div class="splash__logo">
+      <span class="splash__logo-mark">◆</span>
+      <span class="splash__logo-text">Sinyal<span class="accent-cyan">AI</span></span>
+    </div>
+
+    <p class="splash__tagline">
+      Yapay zeka dünyasındaki sinyalleri gürültüden ayıklıyoruz.<br>
+      Günlük analiz, araç incelemeleri ve saha notları — tek yerde.
+    </p>
+
+    <button id="enter-site-btn" class="btn btn--glow" type="button">
+      İçeriklere Göz At
+      <span class="btn__arrow">→</span>
+    </button>
+
+    <p class="splash__hint">v1.0 · canlı veri altyapısına hazır</p>
+  </div>
+</div>
+
+<!-- ============================================= -->
+<!-- ANA SİTE                                       -->
+<!-- ============================================= -->
+<div id="main-site" class="site" hidden>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a href="#" class="logo">
+        <span class="logo__mark">◆</span>
+        <span class="logo__text">Sinyal<span class="accent-cyan">AI</span></span>
+      </a>
+
+      <div class="live-badge">
+        <span class="live-badge__dot" aria-hidden="true"></span>
+        <span class="live-badge__label">Yayında</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <p class="eyebrow">// besleme aktif</p>
+      <h1 class="hero__title">Son Yapay Zeka Haberleri</h1>
+      <p class="hero__subtitle">
+        Modelden ürüne, araştırmadan araç setine — takip etmeye değer her şey.
+      </p>
+    </section>
+
+    <section class="news container" aria-label="Haber akışı">
+      <div id="news-grid" class="news-grid">
+        <!-- Kartlar script.js içindeki renderNewsGrid() fonksiyonu tarafından
+             dinamik olarak buraya basılır. Şu an örnek veriyle,
+             ileride Firebase Firestore getDocs() çıktısıyla doldurulacak. -->
+      </div>
+
+      <div id="news-empty" class="news-empty" hidden>
+        <p>Şu anda gösterilecek haber yok.</p>
+        <p class="news-empty__sub">Yeni içerikler yayınlandığında burada görünecek.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <span>© 2026 SinyalAI</span>
+      <span class="site-footer__dim">Statik altyapı · Firebase entegrasyonuna hazır</span>
+    </div>
+  </footer>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
