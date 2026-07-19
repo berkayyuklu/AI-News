@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Paneli — SinyalAI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+</head>
+<body class="admin-body">
+
+<!-- Yetkisiz erişim / yükleniyor ekranı -->
+<div id="admin-gate" class="admin-gate">
+  <p id="admin-gate-message">Yetki kontrol ediliyor…</p>
+  <a href="index.html" class="link-btn">Ana sayfaya dön</a>
+</div>
+
+<div id="admin-app" class="admin" hidden>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a href="index.html" class="logo">
+        <span class="logo__mark">◆</span>
+        <span class="logo__text">Sinyal<span class="accent-cyan">AI</span></span>
+        <span class="admin-badge">Admin</span>
+      </a>
+      <div class="site-header__right">
+        <a href="index.html" class="btn btn--ghost">Siteye Dön</a>
+        <button id="admin-logout-btn" class="btn btn--ghost" type="button">Çıkış Yap</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container admin-main">
+
+    <!-- İSTATİSTİK KARTLARI -->
+    <section class="admin-section">
+      <h2 class="admin-section__title">Genel Bakış</h2>
+      <div class="stat-cards">
+        <div class="stat-card">
+          <span class="stat-card__label">Toplam Haber</span>
+          <span id="stat-news" class="stat-card__value">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">Toplam Yorum</span>
+          <span id="stat-comments" class="stat-card__value">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">Toplam Beğeni</span>
+          <span id="stat-likes" class="stat-card__value">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">Toplam Tıklama</span>
+          <span id="stat-clicks" class="stat-card__value">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">Tekil Ziyaretçi</span>
+          <span id="stat-visitors" class="stat-card__value">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRAFİKLER -->
+    <section class="admin-section">
+      <h2 class="admin-section__title">Analiz</h2>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3 class="chart-card__title">Haber Başına Tıklama (İlk 10)</h3>
+          <canvas id="clicks-chart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-card__title">Son 7 Gün — Tekil Ziyaretçi</h3>
+          <canvas id="visitors-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- HABER YÖNETİMİ -->
+    <section class="admin-section">
+      <div class="admin-section__header">
+        <h2 class="admin-section__title">Haberler</h2>
+        <button id="new-news-btn" class="btn btn--primary btn--sm" type="button">+ Yeni Haber</button>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Başlık</th>
+              <th>Kategori</th>
+              <th>Tıklama</th>
+              <th>Beğeni</th>
+              <th>Yorum</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="news-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- HABER EKLE / DÜZENLE MODALI -->
+<div id="news-form-modal" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="news-form-title">
+    <button class="modal__close" type="button" data-close-modal="news-form-modal" aria-label="Kapat">✕</button>
+    <h2 id="news-form-title" class="modal__title">Yeni Haber</h2>
+
+    <form id="news-form" class="admin-form">
+      <input type="hidden" name="id">
+      <label class="field">
+        <span class="field__label">Başlık</span>
+        <input type="text" name="title" required>
+      </label>
+      <label class="field">
+        <span class="field__label">Kategori</span>
+        <input type="text" name="category" required placeholder="Yapay Zeka, Araçlar, Araştırma...">
+      </label>
+      <label class="field">
+        <span class="field__label">Kısa Özet (kart üzerinde görünür)</span>
+        <textarea name="summary" rows="2" required></textarea>
+      </label>
+      <label class="field">
+        <span class="field__label">İçerik (detay sayfasında görünür)</span>
+        <textarea name="content" rows="5" required></textarea>
+      </label>
+      <label class="field">
+        <span class="field__label">Görsel URL (opsiyonel)</span>
+        <input type="url" name="imageUrl" placeholder="https://...">
+      </label>
+      <p class="auth-form__error" data-form-error hidden></p>
+      <button class="btn btn--primary" type="submit">Kaydet</button>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>
